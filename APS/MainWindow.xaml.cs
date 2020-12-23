@@ -34,6 +34,7 @@ namespace APS
 
         private void paste(IEnumerable<MyPicture> newPictures)
         {
+            MyPictures.Clear();
             foreach (var item in newPictures)
             {
                 MyPictures.Add(item);
