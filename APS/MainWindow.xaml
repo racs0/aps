@@ -362,7 +362,7 @@
                         <!--// Home //-->
 
                         <ListViewItem HorizontalAlignment="Left"
-                                      Margin="0,0,0,15" MouseDoubleClick="ListViewItem_MouseEnter_Folder"
+                                      Margin="0,0,0,15" MouseEnter="ListViewItem_MouseEnter_Folder"
                                       >
 
                             <StackPanel Orientation="Horizontal"
