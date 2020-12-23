@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="APS" 
         Height="540" 
-        Width="960"
+        Width="920"
         ResizeMode="NoResize"
         Topmost="True"
         WindowStyle="None"
@@ -183,7 +183,7 @@
             <Grid>
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="65"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="60"/>
                     
@@ -212,7 +212,7 @@
 
                 <ListBox ItemsSource="{Binding MyPictures}"
 
-                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                ScrollViewer.VerticalScrollBarVisibility="Hidden"
 
                 Grid.Column="1" Grid.Row="1" SelectionChanged="ListBox_SelectionChanged" BorderThickness="0" Background="Transparent">
                     <ListBox.ItemsPanel> 
