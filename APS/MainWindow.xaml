@@ -165,7 +165,7 @@
 
             <!--// Background Image //-->
 
-            <Grid x:Name="BG" PreviewMouseLeftButtonDown="BG_PreviewMouseLeftButtonDown">
+            <Grid x:Name="BG" PreviewMouseLeftButtonDown="BG_PreviewMouseLeftButtonDown" Opacity="0.5">
 
                 <Grid.Background>
 
@@ -214,7 +214,7 @@
 
                 ScrollViewer.VerticalScrollBarVisibility="Hidden"
 
-                Grid.Column="1" Grid.Row="1" SelectionChanged="ListBox_SelectionChanged" BorderThickness="0" Background="Transparent">
+                Grid.Column="1" Grid.Row="1"  BorderThickness="0" Background="Transparent">
                     <ListBox.ItemsPanel> 
                         <ItemsPanelTemplate>
                             <UniformGrid Columns="4" />
@@ -357,12 +357,12 @@
                     <ListView  x:Name="LV"
                                Background="Transparent"
                                BorderBrush="Transparent"
-                               ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                               ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionMode="Single">
 
                         <!--// Home //-->
 
                         <ListViewItem HorizontalAlignment="Left"
-                                      Margin="0,0,0,15" MouseEnter="ListViewItem_MouseEnter_Folder"
+                                      Margin="0,0,0,15" MouseLeftButtonUp="ListViewItem_MouseEnter_Folder"
                                       >
 
                             <StackPanel Orientation="Horizontal"
