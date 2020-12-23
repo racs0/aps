@@ -63,6 +63,8 @@ namespace APS
                     Url = new Uri(f, UriKind.Absolute),
                     Title = System.IO.Path.GetFileName(f)
                 }));
+
+                BG.Opacity = 0.5;
             }
         }
 
