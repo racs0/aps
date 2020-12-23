@@ -371,7 +371,7 @@
                                 <Image Source="Images/icons8-picture-48 (2)g.png"
                                        Stretch="None"/>
 
-                                <TextBlock Text="Choose a Folder"
+                                <TextBlock Text="Choose Images"
                                            Margin="25,0,0,0"
                                            Style="{StaticResource font_style}"/>
 
