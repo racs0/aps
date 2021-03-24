@@ -82,8 +82,9 @@ namespace APS
         private void ListViewItem_MouseEnter_Sort(object sender, MouseEventArgs e)
         {
             UpdateListViewItems();
-            SortWindow s = new SortWindow();
-            s.ShowDialog();
+            SortWindow s = new SortWindow(this);
+            s.Show();
+            this.Close();
 
         }
 
@@ -111,5 +112,7 @@ namespace APS
         {
 
         }
+
+     
     }
 }

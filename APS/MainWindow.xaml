@@ -9,7 +9,6 @@
         Height="540" 
         Width="920"
         ResizeMode="NoResize"
-        Topmost="True"
         WindowStyle="None"
         WindowStartupLocation="CenterScreen">
     

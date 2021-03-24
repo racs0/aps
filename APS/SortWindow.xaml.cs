@@ -16,7 +16,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-
+using Path = System.IO.Path;
 
 namespace APS
 {
@@ -26,11 +26,15 @@ namespace APS
     public partial class SortWindow : Window
     {
         private string choosedFilePath;
+        private readonly MainWindow _mainWindow;
 
-        public SortWindow()
+
+        public SortWindow(MainWindow mainWindow)
         {
             InitializeComponent();
+            _mainWindow = mainWindow;
         }
+
 
         private void BtnFilePath_Click(object sender, RoutedEventArgs e)
         {
@@ -45,27 +49,60 @@ namespace APS
 
         private void BtnSort_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow mw = new MainWindow();
-            IEnumerable<MyPicture> pictures = mw.MyPictures;
+            IEnumerable<MyPicture> pictures = _mainWindow.MyPictures;
             string chosenPath;
 
-            for (int i = 0; i < pictures.Count()-1; i++)
+            for (int i = 1; i < pictures.Count(); i++)
             {
-                DateTime lastModified = System.IO.File.GetLastWriteTime(pictures.ElementAt(i).Url.ToString());
-                chosenPath = "choosedFilePath" + lastModified.ToString();
-                System.IO.Directory.CreateDirectory(chosenPath);
+                DateTime lastModified = File.GetLastWriteTime(pictures.ElementAt(i).Url.LocalPath);
+                chosenPath = choosedFilePath + @"\" + lastModified.ToShortDateString();
 
-                if (lastModified.ToString().Equals(chosenPath))
+                if (!Directory.Exists(chosenPath))
                 {
-                    try
-                    {
+                    Directory.CreateDirectory(chosenPath);
+                }
 
-                    }
-                    catch (Exception ex)
+                string lastFolderName = Path.GetFileName(chosenPath);
+
+
+                if (lastModified.ToShortDateString().Equals(lastFolderName))
+                {
+                    MoveFile(pictures.ElementAt(i).Url.LocalPath, chosenPath + @"\" + pictures.ElementAt(i).Title);
+                }
+
+            }
+        }
+
+        private async void MoveFile(string source, string destination)
+        {
+            try
+            {
+                using (FileStream sourceStream = File.Open(source, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    using (FileStream destinationStream = File.Create(destination))
                     {
+                        await sourceStream.CopyToAsync(destinationStream);
+                        sourceStream.Close();
+
                     }
                 }
 
+                //if (File.Exists(destination))
+                //{
+                //    MessageBox.Show("The image already exists.");
+                //}
+                //else
+                //{
+                //    File.Move(source, destination);
+                //}
+            }
+            catch (IOException ioex)
+            {
+                MessageBox.Show("An IOException occured during move, " + ioex.Message);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An Exception occured during move, " + ex.Message);
             }
         }
 
