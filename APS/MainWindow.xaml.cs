@@ -32,15 +32,20 @@ namespace APS
             _disabled = false;
         }
 
-        public ObservableCollection<MyPicture> MyPictures { get; } = new ObservableCollection<MyPicture>();
+        public ObservableCollection<MyPicture> MyPictures { get; set; } = new ObservableCollection<MyPicture>();
+        public Dictionary<string, string> pictureLocations { get; set; }
 
+
+        public ShutdownMode ShutdownMode { get; set; }
 
         private void paste(IEnumerable<MyPicture> newPictures)
         {
             MyPictures.Clear();
+            pictureLocations = new Dictionary<string, string>();
             foreach (var item in newPictures)
             {
                 MyPictures.Add(item);
+                pictureLocations.Add(item.Title, item.Url.LocalPath);
             }
         }
 
@@ -82,10 +87,10 @@ namespace APS
         private void ListViewItem_MouseEnter_Sort(object sender, MouseEventArgs e)
         {
             UpdateListViewItems();
+            MyPictures.Clear();
             SortWindow s = new SortWindow(this);
             s.Show();
-            this.Close();
-
+            ShutdownMode = ShutdownMode.OnLastWindowClose;
         }
 
         private void Tg_Btn_Unchecked(object sender, RoutedEventArgs e)

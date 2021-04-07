@@ -4,6 +4,7 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using Ookii.Dialogs.Wpf;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -27,12 +28,18 @@ namespace APS
     {
         private string choosedFilePath;
         private readonly MainWindow _mainWindow;
+        private List<string> duplicates;
+        private List<string> imgList;
+        private Dictionary<string,string> pictures; 
 
 
         public SortWindow(MainWindow mainWindow)
         {
             InitializeComponent();
             _mainWindow = mainWindow;
+            duplicates = new List<string>();
+            imgList = new List<string>();
+            pictures =_mainWindow.pictureLocations; 
         }
 
 
@@ -49,12 +56,11 @@ namespace APS
 
         private void BtnSort_Click(object sender, RoutedEventArgs e)
         {
-            IEnumerable<MyPicture> pictures = _mainWindow.MyPictures;
             string chosenPath;
 
             for (int i = 1; i < pictures.Count(); i++)
             {
-                DateTime lastModified = File.GetLastWriteTime(pictures.ElementAt(i).Url.LocalPath);
+                DateTime lastModified = File.GetLastWriteTime(pictures.Values.ElementAt(i));
                 chosenPath = choosedFilePath + @"\" + lastModified.ToShortDateString();
 
                 if (!Directory.Exists(chosenPath))
@@ -67,9 +73,49 @@ namespace APS
 
                 if (lastModified.ToShortDateString().Equals(lastFolderName))
                 {
-                    MoveFile(pictures.ElementAt(i).Url.LocalPath, chosenPath + @"\" + pictures.ElementAt(i).Title);
+                    MoveFile(pictures.Values.ElementAt(i), chosenPath +  @"\" + pictures.Keys.ElementAt(i));
+                    //imgList.Add(pictures..ElementAt(i));
                 }
 
+                //if (i == pictures.Count() - 1 && duplicates.Count > 0)
+                //{
+                //    MessageBox.Show($"{duplicates.Count} duplicates detected and couldn't be sorted!");
+
+                //    for (int j = 0; j < duplicates.Count; j++)
+                //    {
+                //        pictures.Remove(duplicates[j]);
+                //    }
+
+                //    duplicates.Clear();
+                //}
+
+                //if (i == pictures.Count()-1 && duplicates.Count == 0)
+                //{
+                //    MessageBox.Show($"{pictures.Count()} Pictures are successfully sorted.");
+                //    removeOldOnes(chosenPath);
+                //    this.Close();
+                //}
+
+
+                if (i == pictures.Count() - 1)
+                {
+                    MessageBox.Show($"{pictures.Count()} Pictures are successfully sorted.");
+                    removeOldOnes(chosenPath);
+                    this.Close();
+                }
+
+            }
+        }
+
+        private async void removeOldOnes(string source)
+        {
+            _mainWindow.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
+            for (int i = 0; i < pictures.Keys.Count; i++)
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                File.Delete(pictures.Values.ElementAt(i));
             }
         }
 
@@ -81,20 +127,16 @@ namespace APS
                 {
                     using (FileStream destinationStream = File.Create(destination))
                     {
+                        if (File.Exists(destination))
+                        {
+                            duplicates.Add(destination);
+                        }
                         await sourceStream.CopyToAsync(destinationStream);
                         sourceStream.Close();
 
                     }
                 }
 
-                //if (File.Exists(destination))
-                //{
-                //    MessageBox.Show("The image already exists.");
-                //}
-                //else
-                //{
-                //    File.Move(source, destination);
-                //}
             }
             catch (IOException ioex)
             {
